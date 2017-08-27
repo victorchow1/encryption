@@ -1,0 +1,61 @@
+require "dhashvar.txt";
+
+#print "$password\n";
+
+@date=split //, $date;
+
+tangle();
+
+padit();
+
+blockencrypt();
+
+$code=join('', @entokens);
+print "@entokens\n";
+print "$code\n";
+
+
+
+exit();
+
+
+
+sub tangle
+{
+
+	@passnum=split //, $password;
+	@passnum=map{ord($_)} @passnum;
+	$_ -= $charshift for @passnum;
+
+	#insert pass letter between each digit of date
+
+	for($i=0;$i<=$#passnum;$i++)
+	{
+		$finalnum=$finalnum . $date[$i] . $passnum[$i];
+	}
+	$finalnum=$finalnum . $date[$i];
+
+}
+
+sub padit
+{
+	#padding
+	if(length($finalnum) % 3 ne 0)
+	{
+		$empty=(3-(length($finalnum) % 3));
+		$finalnum=$finalnum . ("1" x $empty);
+		$finalnum="$finalnum" . ($empty x 3);
+	}
+	else
+	{
+		$finalnum=$finalnum . "0" x 3;
+	}
+}
+
+sub blockencrypt
+{
+	@tokens=$finalnum=~/(\d\d\d)/g;
+
+	@entokens=map{(($_ * $multiple) % $prime)} @tokens;
+
+}

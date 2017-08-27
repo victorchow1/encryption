@@ -1,0 +1,66 @@
+require "dhashvar.pm"
+
+
+exit();
+
+#decrypt
+#@entokens=$encrypted=~/(\d\d\d)/g;
+
+
+@detokens=map{(($_ * $inverse) % $prime)} @entokens;
+
+
+for($i=0;$i<=$#detokens;$i++)
+{
+	$_=$detokens[$i];
+	$zeros="0" x (3-length($_));
+	$decrypt[$i]=$zeros . $_;
+}
+
+#print @decrypt;
+$decryptedstr=join "", @decrypt;
+
+
+if(length($decryptedstr) % 3 ne 0)
+{
+	print "wrong format\n";
+}
+
+#depad
+$dpad=chop $decryptedstr;
+$decryptedstr=substr($decryptedstr, 0, (length($decryptedstr)-2-$dpad));
+
+#print "$decryptedstr\n";
+
+#detangle
+#print "$password\n";
+
+
+@depassnum=split //, $password;
+
+@depassnum=map{ord($_)} @depassnum;
+
+$_ -= $charshift for @depassnum;
+
+
+@dedate, @recoveredpass;
+$count=0;
+
+
+for($i=0;$i<6;$i++)
+{
+	$dedate[$i]=substr($decryptedstr, $count, 1);
+#	print "dedate is " . "$dedate[$i]\n";
+	$count+=1;
+	$charsize=length($depassnum[$i]);
+	print "next charsize is $charsize\n";
+	$recoveredpass[$i]=substr($decryptedstr, $count, $charsize);
+	$count+=$charsize;
+	print "$dedate[$i]	$recoveredpass[$i]\n";
+
+}
+
+print @recoveredpass;
+print "\n";
+print @dedate;
+

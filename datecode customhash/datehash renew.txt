@@ -1,0 +1,56 @@
+'now_date=date
+'now_date=replaceslash(now_date)
+
+inputdate=DateSerial(2004, 10, 31)
+inputdate=replaceslash(inputdate)
+hashvar=hashval(inputdate)
+unhashedvar=unhashval(hashvar)
+'wscript.echo validatedate(unhashedvar)
+
+function hashval(inputdate)
+	password=99954732
+	modfield=100000000
+
+	res=(inputdate+password) mod modfield
+	wscript.echo res
+	hashval=res
+end function
+
+function unhashval(hashvar)
+	password=99954732
+	modfield=100000000
+
+	reverse=(hashvar-password) mod modfield
+	if reverse < 0 then
+		reverse=(reverse + modfield) mod modfield
+	end if
+	wscript.echo reverse
+	unhashval=reverse
+end function
+
+
+
+
+function replaceslash(strpath)
+	ipos=1
+	do while instr(ipos, strpath, "/", 1) <> 0
+		islash=instr(ipos, strpath, "/", 1)
+'		wscript.echo islash
+		strout=strout & mid(strpath, ipos, islash-ipos) & ""
+		ipos=islash + 1
+	loop
+	strout=strout & mid(strpath, ipos, len(strpath))
+
+	replaceslash=strout
+end function
+
+function validatedate(testdate)
+	date1 = DateSerial(2004, 10, 1)
+	date2 = DateSerial(2006, 10, 1)
+
+	wscript.echo date1
+	date2=DateAdd("d",daysold, date1)
+	if date1 > date2 then
+		wscript.echo date2
+	end if
+end function
